@@ -72,10 +72,7 @@ static void display_reset() {
     spi_write_blocking(SPI_DEVICE, cmd_list, sizeof(cmd_list));
     gpio_put(PIN_DC, DC_DATA_MODE);
 
-    // clear the frame buffer and flag it to be transferred
-    memset(frame_buffer, 0x00, sizeof(frame_buffer));
-    fb_cursor_index = 0;
-    display_needs_refresh = true;
+    clear_screen();
 }
 
 
@@ -142,6 +139,12 @@ void draw_line(int x0, int y0, int x1, int y1) {
   display_needs_refresh = true;
 }
 
+void clear_screen() {
+    // zero the frame buffer and flag it to be transferred
+    bzero(frame_buffer, sizeof(frame_buffer));
+    fb_cursor_index = 0;
+    display_needs_refresh = true;
+}
 
 // set the text output position
 // rows go from 0 at the top to NUM_Y_PIXELS/8 - 1 and columns go from 0 on the left to NUM_X_PIXELS/8 - 1

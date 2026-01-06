@@ -31,3 +31,4 @@ void set_pixel(uint x, uint y);
 void clear_pixel(uint x, uint y);
 void draw_line(int x0, int y0, int x1, int y1);
 void set_cursor_pos(uint text_row, uint text_col);
+void clear_screen();
