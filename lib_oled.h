@@ -1,3 +1,5 @@
+#pragma once
+
 #include "pico/stdlib.h"
 #include "pico/stdio/driver.h"
 #include "font.h"

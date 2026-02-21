@@ -10,6 +10,8 @@
 // at the top. The bitmaps were translated from one of the original IBM BIOS fonts
 // released over 45yrs ago (see https://int10h.org/oldschool-pc-fonts/)
 
+#pragma once
+
 #include <stdint.h>
 
 #define FONT_INDEX_UNDEF    0

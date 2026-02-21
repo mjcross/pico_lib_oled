@@ -10,7 +10,7 @@
 #include "pico/stdlib.h"
 #include "hardware/dma.h"
 #include "hardware/spi.h"
-#include "oled.h"
+#include "lib_oled.h"
 
 // modes for the ssd1309 data/command pin (see the datasheet)
 #define DC_COMMAND_MODE     0
@@ -24,7 +24,6 @@ static volatile uint fb_cursor_index = 0;
 static struct repeating_timer frame_timer;
 static void fb_out_chars(const char *buf, int len);
 static stdio_driver_t fb_stdio_driver = { fb_out_chars };
-
 
 // configure a dma channel to send the frame buffer over SPI
 static void dma_init() {
