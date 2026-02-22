@@ -24,6 +24,7 @@ static volatile uint fb_cursor_index = 0;
 static struct repeating_timer frame_timer;
 static void fb_out_chars(const char *buf, int len);
 static stdio_driver_t fb_stdio_driver = { fb_out_chars };
+static uint8_t text_bits_xor;
 
 // configure a dma channel to send the frame buffer over SPI
 static void dma_init() {
@@ -100,8 +101,17 @@ static void fb_out_chars(const char *buf, int len) {
             } else {
                 font_index = FONT_BYTES_PER_CODE * (FONT_INDEX_START + code - FONT_CODE_FIRST);
             }
-            // copy bitmap to frame buffer and advance cursor
+            // copy bitmap to frame buffer
             memcpy(&frame_buffer[fb_cursor_index], &font[font_index], FONT_BYTES_PER_CODE);
+
+            // handle inverse video
+            if (text_bits_xor) {
+                for (int i = 0; i < FONT_BYTES_PER_CODE; i += 1) {
+                    frame_buffer[fb_cursor_index + i] ^= text_bits_xor;
+                }
+            }
+
+            // advance cursor
             fb_cursor_index += FONT_BYTES_PER_CODE;
         }
     }
@@ -162,8 +172,16 @@ static bool frame_refresh_callback(__unused struct repeating_timer *t) {
     return true;    // reschedule the timer
 }
 
+void inline set_inverse_video(bool is_set) {
+    text_bits_xor = 0x00;
+    if (is_set) {
+        text_bits_xor = 0xff;
+    }
+}
+
 // initialise the library
-void oled_init() {
+// returns: pointer to frame buffer
+uint8_t *oled_init(uint32_t frame_rate_ms) {
     dma_init();
     interface_init();
     display_reset();
@@ -172,5 +190,8 @@ void oled_init() {
     stdio_set_driver_enabled(&fb_stdio_driver, true);
 
     // start the frame refresh
-    add_repeating_timer_ms(FRAME_PERIOD_MS, frame_refresh_callback, NULL, &frame_timer);
+    add_repeating_timer_ms(frame_rate_ms, frame_refresh_callback, NULL, &frame_timer);
+
+    // return pointer to frame buffer
+    return frame_buffer;
 }

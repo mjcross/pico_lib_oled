@@ -10,9 +10,6 @@
 #define PIXELS_PER_BYTE     8
 #define TABSTOPS            4
 
-// how often we want to refresh the display from the frame buffer
-#define FRAME_PERIOD_MS     20      // 50 Hz
-
 // clock rate for the SPI interface
 // the ssd1309 is specified up to 10 Mbit/sec
 #define DISPLAY_SPI_BITRATE 10 * 1000 * 1000
@@ -28,9 +25,10 @@
 #define PIN_R               21      // reset (active low)
 
 // public API
-void oled_init();
+uint8_t *oled_init(uint32_t frame_rate_ms);
 void set_pixel(uint x, uint y);
 void clear_pixel(uint x, uint y);
 void draw_line(int x0, int y0, int x1, int y1);
 void set_cursor_pos(uint text_row, uint text_col);
 void clear_screen();
+void set_inverse_video(bool is_set);
