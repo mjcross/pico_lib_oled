@@ -195,3 +195,8 @@ uint8_t *oled_init(uint32_t frame_rate_ms) {
     // return pointer to frame buffer
     return frame_buffer;
 }
+
+// get a reference to our stdio driver
+stdio_driver_t *oled_get_stdio_driver() {
+    return &fb_stdio_driver;
+}

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdio.h>
 #include "pico/stdlib.h"
 #include "pico/stdio/driver.h"
 #include "font.h"
@@ -32,3 +33,4 @@ void draw_line(int x0, int y0, int x1, int y1);
 void set_cursor_pos(uint text_row, uint text_col);
 void clear_screen();
 void set_inverse_video(bool is_set);
+stdio_driver_t *oled_get_stdio_driver();
